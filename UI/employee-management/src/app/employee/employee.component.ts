@@ -1,25 +1,32 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClientService } from '../service/http-client.service';
+import { HttpClientService, Employee } from '../service/http-client.service';
 
 @Component({
-  selector: 'app-employee',
-  templateUrl: './employee.component.html',
-  styleUrls: ['./employee.component.css']
+    selector: 'app-employee',
+    templateUrl: './employee.component.html',
+    styleUrls: ['./employee.component.css']
 })
 export class EmployeeComponent implements OnInit {
 
-  employees: string[];
+    employees: Employee[];
 
-  constructor(private httpClientService: HttpClientService) { }
+    constructor(private httpClientService: HttpClientService) { }
 
-  ngOnInit() {
-    this.httpClientService.getEmployees().subscribe(
-      data => this.handleSuccessfulResponse(data),
-    );
-  }
+    ngOnInit() {
+        this.httpClientService.getEmployees().subscribe(
+            data => this.handleSuccessfulResponse(data),
+        );
+    }
 
-  handleSuccessfulResponse(data) {
-    this.employees = data;
-  }
+    handleSuccessfulResponse(data) {
+        this.employees = data;
+    }
+
+    deleteEmployee(employee: Employee): void {
+        this.httpClientService.deleteEmployee(employee)
+            .subscribe(data => {
+                this.employees = this.employees.filter(u => u !== employee);
+            })
+    };
 
 }
